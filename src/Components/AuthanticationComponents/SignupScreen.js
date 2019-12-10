@@ -21,7 +21,7 @@ export default class SignupScreen extends React.Component {
                     </div>
                     <div className="form-control">
                         <label>
-                        <img src={imagePath.emailImage} alt="image"/>
+                        <img src={imagePath.userIconImage} alt="image"/>
                         </label>
                         <input type="text" placeholder="Full Name"/>
                     </div>
@@ -33,14 +33,28 @@ export default class SignupScreen extends React.Component {
                     </div>
                     <div className="form-control">
                         <label>
+                        <img src={imagePath.emailIconImage} alt="image"/>
+                        </label>
+                        <input type="text" placeholder="Email Address"/>
+                    </div>
+                    <div className="form-control">
+                        <label>
                         <img src={imagePath.lockImage} alt="image"/>
                         </label>
-                        <input type="text" placeholder="Username"/>
-                        <a><img src={imagePath.qaImage}/></a>
+                        <input type="password" placeholder="Password"/>
                     </div>
-                    <button className="primary-btn">Login</button>
+                    <button className="primary-btn">Create Account</button>
                 </form>
-                <h5>Don’t have an account?<a>Sign up here!</a></h5>
+                <div className="w-100">
+                    <div className="custom-checkbox">
+                        <input type="checkbox"/>
+                        <label>I agree with Terms & Conditions</label>
+                    </div>
+                    <div className="custom-checkbox">
+                        <input type="checkbox"/>
+                        <label>I want to subscribe to WETP News newsletter.</label>
+                    </div>
+                </div>
             </div>
         )
     }

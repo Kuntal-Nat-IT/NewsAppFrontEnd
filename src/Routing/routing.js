@@ -9,7 +9,7 @@ export default class Routing extends React.Component {
         // <Router>
         //     <Route path="/" exact component={LoginScreen} />
         // </Router>
-        <SignupScreen/>
+        <LoginScreen/>
       )
     }
 }
