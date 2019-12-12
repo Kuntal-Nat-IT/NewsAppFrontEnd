@@ -1,15 +1,22 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Notfound from '../Components/page404';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import LoginScreen from '../Components/AuthanticationComponents/LoginScreen';
 import SignupScreen from '../Components/AuthanticationComponents/SignupScreen';
+import Home  from '../Components/Home/home';
+
 
 export default class Routing extends React.Component {
     render(){
       return(
-        // <Router>
-        //     <Route path="/" exact component={LoginScreen} />
-        // </Router>
-        <LoginScreen/>
+        <Router>
+          <Switch>
+            <Route path="/" exact component={Home} />
+            <Route path="/register" exact component={SignupScreen} />
+            <Route path="/login" component={LoginScreen} />
+            <Route component={Notfound} />
+          </Switch>
+        </Router>
       )
     }
 }

@@ -145,3 +145,11 @@ body{
   .custom-checkbox input[type="checkbox"]:checked + label{
       font-weight: 700;
   }
+
+  .bottomstyle{
+    padding-top: 20px;
+  }
+
+  .linkcolor{
+    color: black
+  }
