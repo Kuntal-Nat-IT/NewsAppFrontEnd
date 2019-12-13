@@ -1,7 +1,8 @@
 import React from 'react';
 import './style.css';
 import imagePath from '../imageConstants';
-import axios from "axios";
+// import axios from "axios";
+const axios = require('axios');
 
 export default class LoginScreen extends React.Component {
 
@@ -15,13 +16,34 @@ export default class LoginScreen extends React.Component {
             loading: false,
             success: false,
             usrname: "",
-            psw: ""
+            psw: "",
+            alreadylogedin: false
         }
 
         this.handleInputChangeValue = this.handleInputChangeValue.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleFileChange = this.handleFileChange.bind(this);
     }
+
+    async componentDidMount()
+    {
+        try 
+        {
+          const response = await fetch('http://localhost:8000/checksession/');
+          const json = await response.json();
+          if(json['loggedin'])
+          {
+            this.setState({alreadylogedin : true})
+            this.props.history.push('/')
+          }
+          
+        }
+        catch (error) 
+        {
+          console.error(error);
+        }
+    }
+
 
     handleInputChangeValue(event)
     {
@@ -46,6 +68,7 @@ export default class LoginScreen extends React.Component {
         });
     }
 
+
     handleSubmit(e)
     {
         e.preventDefault();
@@ -61,7 +84,7 @@ export default class LoginScreen extends React.Component {
             // this.setState({
             //  success: response['data']['success']
             //  })
-            this.props.history.push('/')
+            this.props.history.push('/home')
             )
           .catch(err => console.log(err));
     }

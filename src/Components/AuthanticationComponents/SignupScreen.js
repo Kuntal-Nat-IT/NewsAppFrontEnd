@@ -1,7 +1,8 @@
 import React from 'react';
 import './style.css';
 import imagePath from '../imageConstants';
-import axios from "axios";
+// import axios from "axios";
+const axios = require('axios');
 
 
 export default class SignupScreen extends React.Component {
@@ -19,13 +20,38 @@ export default class SignupScreen extends React.Component {
             usrmail: "",
             usrpsw: "",
             usrimage: "",
-            usrtrmscond: false,
-            usrsubscrption: true
+            usrtrmscond: 'off',
+            usrsubscrption: true,
+            alreadylogedin: false,
+            imgchaeck: false,
+            noerror: false,
+            usrchooseimgpath: ''
         }
 
         this.handleInputChangeValue = this.handleInputChangeValue.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleFileChange = this.handleFileChange.bind(this);
+        this.handleInputChangetermscond = this.handleInputChangetermscond.bind(this);
+    }
+
+
+    async componentDidMount()
+    {
+        try 
+        {
+          const response = await fetch('http://localhost:8000/checksession/');
+          const json = await response.json();
+          if(json['loggedin'])
+          {
+            this.setState({alreadylogedin : true})
+            this.props.history.push('/')
+          }
+          
+        }
+        catch (error) 
+        {
+          console.error(error);
+        }
     }
 
 
@@ -39,6 +65,7 @@ export default class SignupScreen extends React.Component {
         this.setState({
             formData: formData
         });
+        
     }
 
     handleFileChange(event) {
@@ -50,6 +77,22 @@ export default class SignupScreen extends React.Component {
         this.setState({
             formData: formData
         });
+
+        this.setState({usrchooseimgpath : URL.createObjectURL(event.target.files[0])})
+        this.setState({usrimage : value})
+        this.setState({imgchaeck : true})
+    }
+
+
+    handleInputChangetermscond(event)
+    {
+        let name = event.target.name;
+        let value = event.target.value;
+        
+        if(value == 'on')
+        {
+            this.setState({noerror : true})
+        }
     }
 
     handleSubmit(e)
@@ -60,15 +103,36 @@ export default class SignupScreen extends React.Component {
             formData.append(key, this.state.formData[key]);
         }
 
-        axios
+        if(this.state.noerror)
+        {
+            axios
           .post("http://localhost:8000/register/", formData)
-          .then(res => console.log("Coming Response : ", res))
+          .then(res =>
+            this.props.history.push('/login')
+            )
           .catch(err => console.log(err));
+        }
+        else
+        {
+            alert("Please Agree Terms & Condition !!");
+        }
     }
 
 
     render(){
         const { errors, formSubmitted } = this.state;
+
+        const flag = this.state.imgchaeck;
+        let path = '';
+
+        if(flag)
+        {   
+            path = <img src={this.state.usrchooseimgpath} alt="image" className="user-pic"/>;
+        }
+        else
+        {
+            path = <img src={imagePath.userImage} alt="image" className="user-pic"/>;
+        }
         
         return(
             <div className="loginArea">
@@ -82,7 +146,8 @@ export default class SignupScreen extends React.Component {
 
                     <div className="text-center">
                         <div class="upload-btn-wrapper">
-                            <img src={imagePath.userImage} alt="image" className="user-pic"/>
+                            {/* <img src={imagePath.userImage} alt="image" className="user-pic"/> */}
+                            {path}
                             <img src={imagePath.cameraImage} alt="image" className="camera-pic"/>
                             <input type="file" name="userimage" onChange={(ev) => this.handleFileChange(ev)} autoComplete="off" required/>
                         </div>
@@ -116,7 +181,7 @@ export default class SignupScreen extends React.Component {
 
                 <div className="w-100">
                     <div className="custom-checkbox">
-                        <input type="checkbox" name="usrtrmscond" />
+                        <input type="checkbox" name="usrtrmscond" onChange={(ev) => this.handleInputChangetermscond(ev)} />
                         <label>I agree with Terms & Conditions</label>
                     </div>
                     <div className="custom-checkbox">
