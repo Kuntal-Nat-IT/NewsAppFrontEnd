@@ -29,8 +29,9 @@ export default class LoginScreen extends React.Component {
     {
         try 
         {
-          const response = await fetch('http://localhost:8000/checksession/');
+          const response = await fetch('http://kuntalcbnits.pythonanywhere.com/checksession/');
           const json = await response.json();
+          console.log("json >> ", json);
           if(json['loggedin'])
           {
             this.setState({alreadylogedin : true})
@@ -78,7 +79,7 @@ export default class LoginScreen extends React.Component {
         }
 
         axios
-          .post("http://localhost:8000/login/", formData)
+          .post("http://kuntalcbnits.pythonanywhere.com/login/", formData)
           .then(response =>
             // console.log(response['data']['success'])
             // this.setState({

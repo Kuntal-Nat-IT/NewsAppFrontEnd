@@ -39,8 +39,9 @@ export default class SignupScreen extends React.Component {
     {
         try 
         {
-          const response = await fetch('http://localhost:8000/checksession/');
+          const response = await fetch('http://kuntalcbnits.pythonanywhere.com/checksession/');
           const json = await response.json();
+          console.log("json >> ", json);
           if(json['loggedin'])
           {
             this.setState({alreadylogedin : true})
@@ -106,7 +107,7 @@ export default class SignupScreen extends React.Component {
         if(this.state.noerror)
         {
             axios
-          .post("http://localhost:8000/register/", formData)
+          .post("http://kuntalcbnits.pythonanywhere.com/register/", formData)
           .then(res =>
             this.props.history.push('/login')
             )
