@@ -1,8 +1,7 @@
 import React from 'react';
 import './style.css';
 import imagePath from '../imageConstants';
-// import axios from "axios";
-const axios = require('axios');
+import axios from "axios";
 
 export default class LoginScreen extends React.Component {
 

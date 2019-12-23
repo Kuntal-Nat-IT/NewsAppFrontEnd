@@ -2,7 +2,6 @@ import React from 'react';
 import './style.css';
 import imagePath from '../imageConstants';
 import axios from "axios";
-axios.defaults.withCredentials = true;
 
 export default class LoginScreen extends React.Component {
 
@@ -27,12 +26,7 @@ export default class LoginScreen extends React.Component {
 
     CheckSession()
     {
-        axios.get("http://127.0.0.1:8000/checksession/", 
-        {
-            // withCredentials: true,
-            'Access-Control-Allow-Credentials': true
-        }
-        )
+        axios.get("http://127.0.0.1:8000/checksession/")
         .then(response => { 
             console.log("+++++++++++++", response['data']['loggedin'])
             let res = response['data']['loggedin']

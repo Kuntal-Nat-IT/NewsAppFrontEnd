@@ -19,12 +19,7 @@ class home extends React.Component {
 
     CheckSession()
     {
-        axios.get("http://127.0.0.1:8000/checksession/", 
-        {
-            // withCredentials: true,
-            'Access-Control-Allow-Credentials': true
-        }
-        )
+        axios.get("http://127.0.0.1:8000/checksession/")
         .then(response => { 
             console.log("+++++++++++++", response['data']['loggedin'])
             let res = response['data']['loggedin']
