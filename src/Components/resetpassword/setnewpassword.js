@@ -1,8 +1,8 @@
 import React from 'react';
 import './style.css';
 import imagePath from '../imageConstants';
-import axios from "axios";
-axios.defaults.withCredentials = true;
+// import axios from "axios";
+const axios = require('axios');
 
 export default class LoginScreen extends React.Component {
 
@@ -15,46 +15,39 @@ export default class LoginScreen extends React.Component {
             formSubmitted: false,
             loading: false,
             success: false,
-            usrname: "",
-            psw: ""
+            usrpassword: ""
         }
 
         this.handleInputChangeValue = this.handleInputChangeValue.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleFileChange = this.handleFileChange.bind(this);
     }
 
 
-    CheckSession()
+    CheckValidRequest()
     {
-        axios.get("http://127.0.0.1:8000/checksession/", 
-        {
-            // withCredentials: true,
-            'Access-Control-Allow-Credentials': true
-        }
-        )
-        .then(response => { 
-            console.log("+++++++++++++", response['data']['loggedin'])
-            let res = response['data']['loggedin']
-            if(res)
+        fetch('http://127.0.0.1:8000/check/forget/password/session/').then(response => {
+            return (response.json());
+          }).then(data => 
             {
-                this.props.history.push('/')
-            }
-            else
-            {
+              console.log(data['user']);
+              let res = data['user']
+              
+              if(!res)
+              {
                 this.props.history.push('/login')
+              }
+
             }
-        })
-        .catch(error => {
-            console.log(error);
-        });
+          ).catch(error => {
+                console.log("Coming from Catch block : ", Promise.reject(Error(error.message)))
+          })
     }
     
 
     componentDidMount()
     {
-        this.CheckSession()
-        console.log("Login Page is called !!")
+        console.log("Set New Password !!!!!!!!!");
+        this.CheckValidRequest()
     }
 
 
@@ -62,17 +55,6 @@ export default class LoginScreen extends React.Component {
     {
         let name = event.target.name;
         let value = event.target.value;
-
-        let { formData } = this.state;
-        formData[name] = value;
-        this.setState({
-            formData: formData
-        });
-    }
-
-    handleFileChange(event) {
-        let name = event.target.name;
-        let value = event.target.files[0];
 
         let { formData } = this.state;
         formData[name] = value;
@@ -91,18 +73,16 @@ export default class LoginScreen extends React.Component {
         }
 
         axios
-          .post("http://127.0.0.1:8000/login/", formData)
+          .post("http://127.0.0.1:8000/set-new-password/", formData)
           .then(response =>
             {
-                console.log("Login Done : " + response['data']['success'])
-
                 if(response['data']['success'])
-                {  
-                    this.props.history.push('/')
+                {
+                    this.props.history.push('/login')
                 }
                 else
                 {
-                    this.props.history.push('/login')
+                    this.props.history.push('/resetpassword')
                 }
             }
             )
@@ -116,28 +96,28 @@ export default class LoginScreen extends React.Component {
                 <img src={imagePath.LogoImage} alt="logo image" className="logo-image"/>
 
                 <form className="login-form" onSubmit={this.handleSubmit}>
-                    <div className="form-control">
-                        <label>
-                        <img src={imagePath.emailImage} alt="image"/>
-                        </label>
-                        <input type="text" name="usrname" onChange={(ev) => this.handleInputChangeValue(ev)} autoComplete="off" required placeholder="Username"/>
-                    </div>
+                <br /><br />
+
                     <div className="form-control">
                         <label>
                         <img src={imagePath.lockImage} alt="image"/>
                         </label>
-                        <input type="password" name="psw" onChange={(ev) => this.handleInputChangeValue(ev)} autoComplete="off" required placeholder="Password"/>
+                        <input type="password" placeholder="Password" name="psw1" onChange={(ev) => this.handleInputChangeValue(ev)} autoComplete="off" required />
                         <a><img src={imagePath.qaImage}/></a>
                     </div>
-                    <button className="primary-btn">Login</button>
+
+                    <div className="form-control">
+                        <label>
+                        <img src={imagePath.lockImage} alt="image"/>
+                        </label>
+                        <input type="password" placeholder="Password" name="psw2" onChange={(ev) => this.handleInputChangeValue(ev)} autoComplete="off" required />
+                        <a><img src={imagePath.qaImage}/></a>
+                    </div>
+
+                    <br />
+                    <button className="primary-btn">Submit</button>
                 </form>
                 
-
-                <h5>
-                    Don’t have an account? <a href="/register"><span className="linkcolor"> Signup Here!</span></a>
-                    <br /><br />
-                    Forgot Password? <a href="/resetpassword"><span className="linkcolor"> Click Here</span></a>
-                </h5>
                 
             </div>
         )

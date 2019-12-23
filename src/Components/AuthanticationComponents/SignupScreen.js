@@ -1,9 +1,8 @@
 import React from 'react';
 import './style.css';
 import imagePath from '../imageConstants';
-// import axios from "axios";
-const axios = require('axios');
-
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 export default class SignupScreen extends React.Component {
 
@@ -35,24 +34,35 @@ export default class SignupScreen extends React.Component {
     }
 
 
-    async componentDidMount()
+    CheckSession()
     {
-        try 
+        axios.get("http://127.0.0.1:8000/checksession/", 
         {
-          const response = await fetch('http://kuntalcbnits.pythonanywhere.com/checksession/');
-          const json = await response.json();
-          console.log("json >> ", json);
-          if(json['loggedin'])
-          {
-            this.setState({alreadylogedin : true})
-            this.props.history.push('/')
-          }
-          
+            // withCredentials: true,
+            'Access-Control-Allow-Credentials': true
         }
-        catch (error) 
-        {
-          console.error(error);
-        }
+        )
+        .then(response => { 
+            console.log("+++++++++++++", response['data']['loggedin'])
+            let res = response['data']['loggedin']
+            if(res)
+            {
+                this.props.history.push('/')
+            }
+            else
+            {
+                this.props.history.push('/register')
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
+    
+    componentDidMount()
+    {
+        this.CheckSession()
     }
 
 
@@ -107,7 +117,7 @@ export default class SignupScreen extends React.Component {
         if(this.state.noerror)
         {
             axios
-          .post("http://kuntalcbnits.pythonanywhere.com/register/", formData)
+          .post("http://127.0.0.1:8000/register/", formData)
           .then(res =>
             this.props.history.push('/login')
             )
